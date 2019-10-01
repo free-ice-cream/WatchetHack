@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!-- TEst -->
+<!-- saved from url=(0123)http://sebquack.perseus.uberspace.de/hive_mind_game_table/prototype_final.html?tableId=ff6bf6e8-fcca-11e6-83dc-657c299376b2 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="./style.css" rel="stylesheet">
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+<script src="./vendor/jquery.min.js"></script>
+
+
+<style>
+
+    @keyframes blink_me {
+        to { opacity: 0; }
+    }
+    .blink_me {
+      animation: blink_me 2s linear infinite;
+    }
+
+    @font-face {
+        font-family: GiorgioSans;
+        src: url("fonts/GiorgioSans-Regular.otf") format("opentype");
+    }
+
+    body{
+        text-align:center;
+        font-family: 'GiorgioSans', sans-serif;
+        background-color: #2b2b2b;
+        color: white;
+        letter-spacing: 0.15em; /* improve readability */
+        margin: 25px 20px;
+        padding-left: 10px;
+        padding-top: 10px;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+    }
+
+    text{
+      /* SJ Set font size here for the node text . Base 24px*/
+        font-size: 30px;
+    }
+    .h1{
+        font-size:48px;
+    }
+    .links line {
+        stroke: #000;
+        stroke-opacity: 0.8;
+    }
+    #negativeLink {
+      stroke-dasharray: 5;
+    }
+    .tooltip{
+        background-color:rgba(80,80,80, 0.9); /* less opac and lighter to improve visibility */
+        color:white;
+        padding:10px;
+        border-radius:5px;
+    }
+    .tooltip > h2{
+        color:white;
+        font-weight: 300;
+        margin:0px;
+        margin-bottom: 0px;
+        padding: 0px 10px 15px 10px;
+        display: block;
+    }
+    .tooltip > h3{
+        color:white;
+        font-weight: 300;
+        margin:0px;
+        margin-bottom: 0px;
+        padding: 0px 10px 15px 10px;
+        display: block;
+    }
+    .tooltip > p{
+        color:white;
+        font-weight: 300;
+        margin:0px;
+    }
+    .circleLayoutActive{
+        fill:#999;
+    }
+    .networkLayoutActive{
+        fill:#999;
+    }
+    .close{
+        text-align:right;
+        margin: 0px !important;
+        cursor: crosshair;
+    }
+
+    .noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    }
+
+    #display_btns {
+      position: fixed;
+      top: 24px;
+      left: 32px;
+      font-size: 24px;
+      text-align: left;
+    }
+
+    #filter_btns {
+      position: fixed;
+      top: 120px;
+      left: 32px;
+      font-size: 24px;
+      text-align: left;
+    }
+
+    .display_btn,
+    .filter_btn,
+    .node_filter_btn,
+    .node_clear_filter_btn {
+      text-align: center;
+      border: 3px solid #FFF;
+      margin: 8px 0 0;
+      border-radius: 8px;
+    }
+
+    .display_btn {
+      display: inline-block;
+      width: 80px;
+      line-height: 18px;
+      padding: 6px 0 9px;
+    }
+    .display_btn:hover,
+    .display_btn.current {
+      opacity: 1;
+      cursor: pointer;
+      background-color: rgba(255,255,255,0.333);
+    }
+    .display_btn.disabled,
+    .display_btn.disabled:hover {
+      opacity: 0.25;
+      cursor: default;
+      background-color: transparent;
+    }
+
+    .filter_btn,
+    .node_filter_btn,
+    .node_clear_filter_btn {
+      display: block;
+      width: 100px;
+      opacity: 0.75;
+      padding: 3px 0 6px;
+    }
+    /*.filter_btn.goal_1 {
+      color: #e5243b;
+      border-color: #e5243b;
+    }
+    .filter_btn.goal_2 {
+      color: #dda63a;
+      border-color: #dda63a;
+    }
+    .filter_btn.goal_3 {
+      color: #4c9f38;
+      border-color: #4c9f38;
+    }
+    .filter_btn.goal_4 {
+      color: #ff3a21;
+      border-color: #ff3a21;
+    }
+    .filter_btn.goal_5 {
+      color: #fd6925;
+      border-color: #fd6925;
+    }
+    .filter_btn.goal_6 {
+      color: #3f7e44;
+      border-color: #3f7e44;
+    }
+    .filter_btn.goal_7 {
+      color: #0a97d9;
+      border-color: #0a97d9;
+    }*/
+    .node_filter_btn,
+    .node_clear_filter_btn {
+      width: 180px;
+      display: inline-block;
+    }
+    .filter_btn:hover,
+    .node_filter_btn:hover,
+    .node_clear_filter_btn:hover,
+    .filter_btn.current {
+      opacity: 1;
+      cursor: pointer;
+      background-color: rgba(0,0,0,0.5);
+      color: #FFF;
+      border-color: #FFF;
+    }
+
+</style>
+
+</head>
+
+
+<body>
+    <!-- <h3>TITLE HERE</h3> -->
+    <svg width="1920" height="1080" class="d3 noselect active"></svg>
+
+    <div id="display_btns">
+      <span class="display_btn" id="grid_view_btn">Grid<br />view</span>
+      <span class="display_btn current" id="mesh_view_btn">Mesh<br />view</span>
+      <span class="display_btn" id="whole_network_btn">Whole<br />network</span>
+      <span class="display_btn" id="reload_table_btn">Reload<br />table</span>
+    </div>
+
+    <div id="filter_btns" style="display:none;">
+      Filter by:
+      <span class="filter_btn" data-goal-id style="display:none;"></span>
+      <!-- <span class="filter_btn goal_1" data-goal-id="1">Goal 1</span>
+      <span class="filter_btn goal_2" data-goal-id="2">Goal 2</span>
+      <span class="filter_btn goal_3" data-goal-id="3">Goal 3</span>
+      <span class="filter_btn goal_4" data-goal-id="4">Goal 5</span>
+      <span class="filter_btn goal_5" data-goal-id="5">Goal 9</span>
+      <span class="filter_btn goal_6" data-goal-id="6">Goal 13</span>
+      <span class="filter_btn goal_7" data-goal-id="7">Goal 14</span> -->
+    </div>
+
+
+<script src="./vendor/d3.v4.min.js"></script>
+<!-- <script src="./vendor/d3-geo.min.js"></script> -->
+<!-- <script src="./vendor/opentype.min.js"></script>
+<script src="./vendor/warp.js"></script>
+<script src="./vendor/svg-to-geojson.min.js"></script> -->
+<!-- <script src="js/network.js"></script> -->
+<!-- <script src="js/network_update_d3.js"></script> -->
+<script src="./api_key.js"></script>
+<script src="./network_dynamic.js"></script>
+<!-- <script src="js/network_static.js"></script> -->
+
+<!--
+<div style="position: absolute; top:900px; left:1730px; background-color: #fff; padding: 15px" id="qrcode" title="{&quot;table&quot;: &quot;ff6bf6e8-fcca-11e6-83dc-657c299376b2&quot;}"><canvas width="128" height="128" style="display: none;"></canvas></div>
+
+<script src="./vendor/qrcode.min.js"></script>
+<script>
+    if(tableId) {
+        var qrcode = '{"table": "'+tableId+'"}';
+        console.log(qrcode)
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: qrcode,
+            width: 128,
+            height: 128,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+
+    }
+
+    window.addEventListener("contextmenu", function(e) { e.preventDefault(); })
+
+</script>
+-->
+
+</body></html>
